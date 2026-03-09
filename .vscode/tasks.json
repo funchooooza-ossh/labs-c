@@ -4,7 +4,7 @@
         {
             "label": "Build and Run",
             "type": "shell",
-            "command": "cd ${fileDirname} && /usr/bin/gcc -Wall -Wextra -g3 -I common/ $(find . -name '*.c' -not -path './output/*' | tr '\\n' ' ') -o output/main -lm && ./output/main",
+            "command": "cd ${fileDirname} && mkdir -p output && /usr/bin/gcc -Wall -Wextra -g3 -I common/ $(find . -name '*.c' -not -path './output/*' | tr '\\n' ' ') -o output/main -lm && ./output/main",
             "group": {
                 "kind": "build",
                 "isDefault": true
