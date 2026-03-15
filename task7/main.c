@@ -3,7 +3,8 @@
 #include <string.h>
 
 #define MAX_NAME 50
-#define COUNT 4
+#define MAX_LINE 256
+
 
 #define inputFilePath "input.txt"
 #define outputFilePath "output/output.txt"
@@ -35,23 +36,49 @@ int main() {
         return 1;
     }
     
-    // LINK Массив из 4 элементов типа Human
-    Human humans[COUNT];
+    // LINK Сначала считаем количество строк в файле
     int count = 0;
+    char ch;
+    while ((ch = fgetc(input)) != EOF) {
+        if (ch == '\n') count++;
+    }
+    rewind(input); // возвращаемся в начало файла
     
-    // Читаем данные из файла
-    while (count < COUNT && 
-           fscanf(input, "%s %s %d", 
-                  humans[count].surname, 
-                  humans[count].name, 
-                  &humans[count].birth_year) == 3) {
-        count++;
+    if (count == 0) {
+        fprintf(stderr, "Файл пуст\n");
+        fclose(input);
+        return 1;
+    }
+    
+    // LINK Выделяем память под массив
+    Human *humans = (Human*)malloc(count * sizeof(Human));
+    if (!humans) {
+        fprintf(stderr, "Ошибка выделения памяти\n");
+        fclose(input);
+        return 1;
+    }
+    
+    // LINK Читаем данные из файла
+    int actual_count = 0;
+    char line[MAX_LINE];
+    
+    while (fgets(line, MAX_LINE, input) && actual_count < count) {
+        line[strcspn(line, "\n")] = '\0';
+        if (strlen(line) == 0) continue;
+        
+        // Разбираем строку: фамилия имя год
+        if (sscanf(line, "%s %s %d",
+                   humans[actual_count].surname,
+                   humans[actual_count].name,
+                   &humans[actual_count].birth_year) == 3) {
+            actual_count++;
+        }
     }
     fclose(input);
     
     // LINK Выводим исходный массив
     printf("Исходный массив:\n");
-    for (int i = 0; i < count; i++) {
+    for (int i = 0; i < actual_count; i++) {
         printf("%s %s %d\n", 
                humans[i].surname, 
                humans[i].name, 
@@ -59,11 +86,11 @@ int main() {
     }
     
     // LINK Сортируем по году рождения
-    sort_by_year(humans, count);
+    sort_by_year(humans, actual_count);
     
     // LINK Выводим отсортированный массив в консоль
     printf("\nОтсортированный по году рождения:\n");
-    for (int i = 0; i < count; i++) {
+    for (int i = 0; i < actual_count; i++) {
         printf("%s %s %d\n", 
                humans[i].surname, 
                humans[i].name, 
@@ -77,7 +104,7 @@ int main() {
         return 1;
     }
     
-    for (int i = 0; i < count; i++) {
+    for (int i = 0; i < actual_count; i++) {
         fprintf(output, "%s %s %d\n", 
                 humans[i].surname, 
                 humans[i].name, 
@@ -86,5 +113,7 @@ int main() {
     fclose(output);
 
     printf("\nРезультат записан в %s\n", outputFilePath);
+
+    free(humans);
     return 0;
 }
