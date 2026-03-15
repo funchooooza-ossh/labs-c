@@ -35,7 +35,7 @@ int main() {
         return 1;
     }
     
-    // Массив из 4 элементов типа Human
+    // LINK Массив из 4 элементов типа Human
     Human humans[COUNT];
     int count = 0;
     
@@ -49,7 +49,7 @@ int main() {
     }
     fclose(input);
     
-    // Выводим исходный массив
+    // LINK Выводим исходный массив
     printf("Исходный массив:\n");
     for (int i = 0; i < count; i++) {
         printf("%s %s %d\n", 
@@ -58,10 +58,10 @@ int main() {
                humans[i].birth_year);
     }
     
-    // Сортируем по году рождения
+    // LINK Сортируем по году рождения
     sort_by_year(humans, count);
     
-    // Выводим отсортированный массив в консоль
+    // LINK Выводим отсортированный массив в консоль
     printf("\nОтсортированный по году рождения:\n");
     for (int i = 0; i < count; i++) {
         printf("%s %s %d\n", 
@@ -70,7 +70,7 @@ int main() {
                humans[i].birth_year);
     }
     
-    // Записываем результат в файл
+    // LINK Записываем результат в файл
     FILE *output = fopen(outputFilePath, "w");
     if (!output) {
         fprintf(stderr, "Ошибка открытия %s\n", outputFilePath);
